@@ -36,7 +36,7 @@ const register = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = await User.create({ name, email, password: hashedPassword });
 
-    res.status(201).json({ message: 'User registered', user: newUser });
+    res.status(201).json({ message: 'User registered' });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error });
   }
@@ -66,6 +66,45 @@ const getUserById = async (req, res) => {
   }
 };
 
+const updateUserById = async (req, res) => {
+  const { id } = req.params;
+  const { name, email, password } = req.body;
+
+  try {
+    const user = await User.findByPk(id);
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Check if the new email is already taken by another user
+    if (email && email !== user.email) {
+      const existingUser = await User.findOne({ where: { email } });
+      if (existingUser) {
+        return res.status(400).json({ message: 'Email is already in use' });
+      }
+      user.email = email;
+    }
+
+    // Update other user details
+    if (name) user.name = name;
+
+    // Hash the password if it is being updated
+    if (password) {
+      const salt = await bcrypt.genSalt(10);
+      user.password = await bcrypt.hash(password, salt);
+    }
+
+    await user.save();
+
+    res.status(200).json({ message: 'User updated successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
 const deleteUser = async (req, res) => {
   try {
     const { id } = req.params;
@@ -88,5 +127,6 @@ module.exports = {
   register,
   getAllUsers,
   getUserById,
+  updateUserById,
   deleteUser
 };

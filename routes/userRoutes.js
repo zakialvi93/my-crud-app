@@ -139,6 +139,54 @@ const auth = require('../middlewares/auth');
  *         description: Unauthorized.
  */
 
+/**
+ * @swagger
+ * /api/users/{id}:
+ *   put:
+ *     summary: Update user by ID
+ *     tags:
+ *       - Users
+ *     description: Update a user's details by their ID (authenticated).
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID of the user to update.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 description: Updated name of the user.
+ *               email:
+ *                 type: string
+ *                 description: Updated email of the user.
+ *               password:
+ *                 type: string
+ *                 description: Updated password of the user.
+ *     responses:
+ *       200:
+ *         description: User updated successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *       404:
+ *         description: User not found.
+ *       401:
+ *         description: Unauthorized.
+ *       400:
+ *         description: Validation error.
+ */
 
 /**
  * @swagger
@@ -168,6 +216,7 @@ router.post('/login', userController.login);
 router.post('/register', auth, userController.register);
 router.get('/', auth, userController.getAllUsers);
 router.get('/:id', auth, userController.getUserById);
+router.put('/:id', auth, userController.updateUserById);
 router.delete('/:id', auth, userController.deleteUser);
 
 module.exports = router;
