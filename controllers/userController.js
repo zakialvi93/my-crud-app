@@ -34,7 +34,7 @@ const register = async (req, res) => {
     if (existingUser) return res.status(400).json({ message: 'Email already registered' });
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = await User.create({ name, email, password: hashedPassword });
+    await User.create({ name, email, password: hashedPassword });
 
     res.status(201).json({ message: 'User registered' });
   } catch (error) {
@@ -91,8 +91,7 @@ const updateUserById = async (req, res) => {
 
     // Hash the password if it is being updated
     if (password) {
-      const salt = await bcrypt.genSalt(10);
-      user.password = await bcrypt.hash(password, salt);
+      user.password = await bcrypt.hash(password, 10);
     }
 
     await user.save();
