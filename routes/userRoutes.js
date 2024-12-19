@@ -51,6 +51,7 @@ const auth = require('../middlewares/auth');
  *     summary: User registration
  *     tags:
  *       - Users
+ *     security:  []
  *     description: Registers a new user.
  *     requestBody:
  *       required: true
@@ -213,7 +214,7 @@ const auth = require('../middlewares/auth');
  */
 
 router.post('/login', userController.login);
-router.post('/register', auth, userController.register);
+router.post('/register', userController.register);
 router.get('/', auth, userController.getAllUsers);
 router.get('/:id', auth, userController.getUserById);
 router.put('/:id', auth, userController.updateUserById);
