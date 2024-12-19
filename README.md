@@ -26,7 +26,7 @@ Steps to run the project:
     npx sequelize-cli model:generate --name User --attributes name:string,email:string,password:string
 9. Update the generated migration in migrations/ to add unique constraint on email:
         email: {
-                type: Sequelize.STRING,
+                type: DataTypes.STRING,
                 unique: true,
                 allowNull: false,
               }
