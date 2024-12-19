@@ -2,10 +2,12 @@ const express = require('express');
 const userRoutes = require('./routes/userRoutes');
 const { swaggerUi, swaggerSpec } = require('./swagger');
 require('dotenv').config();
+const cors = require("cors");
 const port = process.env.PORT;
 
 const app = express();
 app.use(express.json());
+app.use(cors());
 
 app.use('/api/users', userRoutes);
 
